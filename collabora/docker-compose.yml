@@ -1,0 +1,18 @@
+services:
+  code:
+    container_name: collabora-code
+    environment:
+      - domain=collabora.${MY_DOMAIN}
+      - server_name=collabora.${MY_DOMAIN}
+      - username=admin
+      - password='password'
+      - 'extra_params=--o:ssl.enable=false --o:ssl.termination=true'
+    restart: always
+    image: collabora/code
+    restart: unless-stopped
+
+
+networks:
+  default:
+    external:
+      name: proxy-net

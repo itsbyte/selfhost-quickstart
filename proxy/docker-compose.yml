@@ -1,0 +1,36 @@
+version: '3'
+services:
+  app:
+    restart: unless-stopped
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: proxy-app
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    environment:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "npm"
+      DB_MYSQL_NAME: "npm"
+    volumes:
+      - /storage/proxy/data:/data
+      - /storage/proxy/letsencrypt:/etc/letsencrypt
+  db:
+    image: 'jc21/mariadb-aria:10.4'
+    container_name: proxy-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'npm'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: 'npm'
+    volumes:
+      - /storage/proxy/data/mysql:/var/lib/mysql
+    restart: unless-stopped
+
+
+networks:
+  default:
+    external:
+      name: proxy-net
